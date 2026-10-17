@@ -20,7 +20,7 @@
 
 ---
 
-## 📌 Executive Summary & Problem Statement
+## Executive Summary & Problem Statement
 
 Conventional fake news detection systems generally formulate misinformation identification as a simple binary text-classification task, learning surface linguistic and stylistic features (e.g., sensationalist wording, punctuation, emotional rhetoric). While these models can flag suspicious text, they suffer from critical limitations:
 1. **No Evidence Grounding**: They cannot establish whether an underlying factual claim is true or false based on empirical reference facts.
@@ -31,7 +31,7 @@ Conventional fake news detection systems generally formulate misinformation iden
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```mermaid
 graph TD
@@ -55,7 +55,7 @@ graph TD
 
 ---
 
-## 🔬 Key Engineering Features
+## Key Engineering Features
 
 - **Heuristic Factual Claim Extraction**: Automatically filters out subjective opinions, rhetorical questions, and greetings while preserving declarative statements with entities and temporal markers.
 - **Dense Semantic Retrieval**: Employs `all-MiniLM-L6-v2` and FAISS `IndexFlatIP` over normalized vectors for millisecond-scale cosine similarity search.
@@ -66,7 +66,7 @@ graph TD
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```
 Fake-News-Detection/
@@ -154,7 +154,7 @@ Fake-News-Detection/
 
 ---
 
-## ⚡ Installation & Quick Start
+## Installation & Quick Start
 
 ### 1. Prerequisites
 - Windows 11 / 10, Linux, or macOS.
@@ -177,7 +177,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🛠️ Reproducing Experiments & Building Indexes
+## Reproducing Experiments & Building Indexes
 
 All experiments are 100% reproducible with local scripts:
 
@@ -200,7 +200,7 @@ pytest -v
 
 ---
 
-## 🌐 Launching the Web Application
+## Launching the Web Application
 
 Launch the modern **EvidenceLens** Streamlit interface:
 
@@ -211,7 +211,7 @@ Open **`http://localhost:8501`** in your web browser.
 
 ---
 
-## 📊 Real Experimental Results
+## Real Experimental Results
 
 ### Proposed Pipeline vs. Conventional Baseline
 
@@ -235,7 +235,7 @@ Open **`http://localhost:8501`** in your web browser.
 
 ---
 
-## 🧪 Automated Test Suite (26 / 26 Passed)
+## Automated Test Suite (26 / 26 Passed)
 
 ```
 tests/test_claim_extraction.py::test_extract_from_normal_article PASSED
@@ -270,7 +270,7 @@ tests/test_verification.py::test_pairwise_verification PASSED
 
 ---
 
-## 🎓 College Viva & Evaluation Demonstration Guide
+## College Viva & Evaluation Demonstration Guide
 
 When presenting EvidenceLens to Dr. Gautam Kumar and the evaluation committee:
 1. **Open the Streamlit Interface** (`http://localhost:8501`).
@@ -284,7 +284,7 @@ When presenting EvidenceLens to Dr. Gautam Kumar and the evaluation committee:
 
 ---
 
-## 📜 Academic Integrity & References
+## Academic Integrity & References
 1. Thorne, J., Vlachos, A., Christodoulopoulos, C., & Mittal, A. (2018). *FEVER: A large-scale dataset for fact extraction and VERification*. NAACL-HLT 2018.
 2. Reimers, N., & Gurevych, I. (2019). *Sentence-BERT: Sentence embeddings using Siamese BERT-networks*. EMNLP-IJCNLP 2019.
 3. Johnson, J., Douze, M., & Jégou, H. (2019). *Billion-scale similarity search with GPUs*. IEEE Transactions on Big Data.
