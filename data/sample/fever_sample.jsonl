@@ -1,0 +1,20 @@
+{"id": 1001, "claim": "The James Webb Space Telescope conducts infrared astronomy.", "label": "SUPPORTS", "evidence": [[null, null, "doc_001", null]]}
+{"id": 1002, "claim": "The James Webb Space Telescope was launched in 1995.", "label": "REFUTES", "evidence": [[null, null, "doc_001", null]]}
+{"id": 1003, "claim": "Neil Armstrong was the first person to step onto the lunar surface.", "label": "SUPPORTS", "evidence": [[null, null, "doc_002", null]]}
+{"id": 1004, "claim": "Apollo 11 landed on Mars.", "label": "REFUTES", "evidence": [[null, null, "doc_002", null]]}
+{"id": 1005, "claim": "Barack Obama served as the 44th president of the United States.", "label": "SUPPORTS", "evidence": [[null, null, "doc_003", null]]}
+{"id": 1006, "claim": "Barack Obama was never a member of the Democratic Party.", "label": "REFUTES", "evidence": [[null, null, "doc_003", null]]}
+{"id": 1007, "claim": "Albert Einstein received the Nobel Prize in Literature.", "label": "REFUTES", "evidence": [[null, null, "doc_004", null]]}
+{"id": 1008, "claim": "Albert Einstein developed the theory of relativity.", "label": "SUPPORTS", "evidence": [[null, null, "doc_004", null]]}
+{"id": 1009, "claim": "The Eiffel Tower was constructed as the entrance arch for the 1889 World's Fair.", "label": "SUPPORTS", "evidence": [[null, null, "doc_006", null]]}
+{"id": 1010, "claim": "The Eiffel Tower was built entirely out of pure solid gold.", "label": "REFUTES", "evidence": [[null, null, "doc_006", null]]}
+{"id": 1011, "claim": "The World Health Organization is headquartered in Geneva, Switzerland.", "label": "SUPPORTS", "evidence": [[null, null, "doc_007", null]]}
+{"id": 1012, "claim": "Alan Turing played a pivotal role in cracking the Enigma machine during World War II.", "label": "SUPPORTS", "evidence": [[null, null, "doc_009", null]]}
+{"id": 1013, "claim": "Python was created by Guido van Rossum.", "label": "SUPPORTS", "evidence": [[null, null, "doc_011", null]]}
+{"id": 1014, "claim": "The Great Wall of China is clearly visible from Mars without a telescope.", "label": "REFUTES", "evidence": [[null, null, "doc_012", null]]}
+{"id": 1015, "claim": "Curiosity rover landed on Mars in August 2012.", "label": "SUPPORTS", "evidence": [[null, null, "doc_015", null]]}
+{"id": 1016, "claim": "Guido van Rossum likes to eat pineapple pizza on Tuesdays.", "label": "NOT ENOUGH INFO", "evidence": []}
+{"id": 1017, "claim": "Albert Einstein had an orange tabby cat named Copernicus.", "label": "NOT ENOUGH INFO", "evidence": []}
+{"id": 1018, "claim": "Neil Armstrong listened to jazz music while walking on the Moon.", "label": "NOT ENOUGH INFO", "evidence": []}
+{"id": 1019, "claim": "The Eiffel Tower painter had a cousin who won a marathon in 1904.", "label": "NOT ENOUGH INFO", "evidence": []}
+{"id": 1020, "claim": "Alan Turing preferred strawberry ice cream over chocolate.", "label": "NOT ENOUGH INFO", "evidence": []}
