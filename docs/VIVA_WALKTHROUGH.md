@@ -38,7 +38,7 @@ There are two different tasks in the repository:
 
 **What it does:** Converts a claim or a corpus passage into a 384-number vector (an embedding). Texts with related meanings tend to have vectors pointing in similar directions. Corpus passages are embedded when the FAISS index is built; each incoming claim is embedded at search time.
 
-**How its result is used:** Both vectors are L2-normalized. FAISS `IndexFlatIP` ranks passages by inner product, which equals cosine similarity for normalized vectors. The retriever searches up to twice the requested `top_k`, discards scores below `0.35`, removes duplicate passage IDs, and returns at most three passages by default.
+**How its result is used:** Both vectors are L2-normalized. FAISS `IndexFlatIP` ranks passages by inner product, which equals cosine similarity for normalized vectors. The retriever searches up to twice the requested `top_k`, discards scores below `0.20`, removes duplicate passage IDs, and returns at most three passages by default.
 
 **Why this choice:** It is a compact pretrained sentence encoder, produces a fixed-size vector for efficient search, and can match paraphrases better than exact word overlap. The project can run on CPU, with CUDA used when available.
 
@@ -87,7 +87,7 @@ If `OPENAI_API_KEY` is present, the code attempts an OpenAI Chat Completions req
 3. **Sentence splitting:** A regular expression splits on `.`, `!`, or `?` followed by whitespace. A list of common abbreviations is temporarily protected. This is a lightweight tokenizer, not a full linguistic sentence parser.
 4. **Claim filtering:** `ClaimExtractor` cleans wrapping quotes, skips duplicates, sentences under four words, questions, short exclamations, and sentences beginning with specified opinion/greeting/call-to-action phrases. It gives surviving sentences heuristic confidence based on a small list of factual signals and a small list of verbs. It keeps at most 15 claims. It does not perform deep entity extraction or semantic claim decomposition.
 5. **Claim embedding:** MiniLM encodes each candidate sentence into a normalized 384-dimensional vector.
-6. **Evidence retrieval:** FAISS searches the indexed corpus for the nearest vectors. Results below the 0.35 relevance threshold are filtered. Three passages are returned by default.
+6. **Evidence retrieval:** FAISS searches the indexed corpus for the nearest vectors. Results below the 0.20 relevance threshold are filtered. Three passages are returned by default.
 7. **Pairwise NLI:** The verifier evaluates every returned passage against the claim. If no passage survived retrieval, the verdict is immediately UNCERTAIN with confidence 0 and reason `missing_evidence`.
 8. **Passage aggregation:** With any passage of relevance at least 0.60, the code looks at labels from all such high-relevance passages. If both support and refutation appear, it assigns UNCERTAIN with a conflict flag and confidence 0.50. Otherwise, it uses the top-ranked passage's label and confidence. If none reaches 0.60, it relevance-weights the three-class probabilities across the returned passages and takes the largest average.
 9. **Explanation:** The rule-based explainer or optional OpenAI call produces a short explanation from the verdict and evidence.

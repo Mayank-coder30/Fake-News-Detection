@@ -64,7 +64,7 @@ News Article Input
 │  - Encode claim → 384-dim vector│
 │  - FAISS search Wikipedia corpus│
 │  - Return Top-3 passages        │
-│  - Filter by threshold (≥ 0.35) │
+│  - Filter by threshold (≥ 0.20) │
 └──────────────┬──────────────────┘
                │
                ▼
@@ -210,7 +210,7 @@ Fake-News-Detection/
 - `document_loader.py` — Reads evidence corpus from `.jsonl` files
 - `embedding_model.py` — Encodes text using `all-MiniLM-L6-v2`, normalizes vectors to unit length
 - `vector_index.py` — FAISS `IndexFlatIP` for cosine similarity search
-- `evidence_retriever.py` — For each claim, finds top-3 passages, filters those below 0.35 threshold
+- `evidence_retriever.py` — For each claim, finds top-3 passages, filters those below 0.20 threshold
 
 ### `src/verification/`
 - `verifier.py` — Sends `(evidence, claim)` pairs to `nli-distilroberta-base`
@@ -254,8 +254,8 @@ $$\langle \hat{e}_c, \hat{e}_p \rangle = \cos(e_c, e_p)$$
 ### Why Sentence-Transformers over TF-IDF for retrieval?
 TF-IDF does exact keyword matching. Sentence-Transformers create **dense semantic representations** — meaning similar *ideas* are close in vector space even with different words.
 
-### What is the Relevance Threshold (0.35)?
-Before passing evidence to the NLI verifier, we check if the semantic similarity score ≥ 0.35. Below this, the claim is immediately marked **UNCERTAIN** because the retrieved "evidence" is likely irrelevant.
+### What is the Relevance Threshold (0.20)?
+Before passing evidence to the NLI verifier, we check if the semantic similarity score ≥ 0.20. Below this, the claim is immediately marked **UNCERTAIN** because the retrieved "evidence" is likely irrelevant.
 
 ### What is Macro-F1?
 The unweighted average F1 across all 3 classes:
@@ -306,7 +306,7 @@ A: FAISS enables millisecond-scale cosine similarity search over dense 384-dimen
 A: A cross-encoder processes the full concatenated `[CLS] Evidence [SEP] Claim [SEP]` through bidirectional attention, letting every word in the claim attend to every word in the evidence. Bi-encoders encode texts independently and lose this interaction. Cross-encoders are more accurate but slower — acceptable for our per-claim verification use case.
 
 **Q: How do you handle the case where evidence is absent?**
-A: Critical principle: *"Absence of evidence is NOT evidence of absence."* If the relevance score of retrieved passages is below 0.35, we classify the claim as UNCERTAIN, never REFUTED. This is an ethical safety guarantee built into the pipeline.
+A: Critical principle: *"Absence of evidence is NOT evidence of absence."* If the relevance score of retrieved passages is below 0.20, we classify the claim as UNCERTAIN, never REFUTED. This is an ethical safety guarantee built into the pipeline.
 
 **Q: What did you actually implement vs what was pre-trained?**
 A: Pre-trained (reused): `all-MiniLM-L6-v2` and `nli-distilroberta-base`.

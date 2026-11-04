@@ -27,9 +27,12 @@ from config import (
     REPORTS_DIR,
     SAMPLE_DATA_DIR,
     FEVER_BASELINE_MODEL_PATH,
+    RELEVANCE_THRESHOLD,
     LABEL_SUPPORTED,
     LABEL_REFUTED,
-    LABEL_UNCERTAIN
+    LABEL_UNCERTAIN,
+    DEFAULT_EVIDENCE_CORPUS,
+    FAISS_METADATA_PATH,
 )
 from src.pipeline.fact_check_pipeline import FactCheckPipeline, PipelineOutput, ArticleSummary
 from src.evaluation.baseline_classifier import BaselineClassifier
@@ -622,7 +625,7 @@ def render_claim(claim, index, is_baseline=False):
                     </div>
                     """, unsafe_allow_html=True)
             else:
-                st.caption("No passages met the minimum relevance threshold (0.35) in the indexed corpus.")
+                st.caption(f"No passages met the minimum relevance threshold ({RELEVANCE_THRESHOLD:.2f}) in the indexed corpus.")
 
 
 def run_baseline_analysis(article_text, extractor, baseline_model):
@@ -796,7 +799,7 @@ def main():
                             </div>
                             """, unsafe_allow_html=True)
                     else:
-                        st.caption("No passages met the minimum relevance threshold (0.35).")
+                        st.caption(f"No passages met the minimum relevance threshold ({RELEVANCE_THRESHOLD:.2f}).")
 
     # ---------------- TAB 2: Benchmark Comparison ----------------
     with tabs[1]:
@@ -833,7 +836,7 @@ def main():
                         <div class="stat-lbl">Macro-F1</div>
                     </div>
                 </div>
-                <div style="font-size: 0.75rem; color: #475569; margin-top: 6px;">Evaluated on 60 FEVER benchmark claims</div>
+                <div style="font-size: 0.75rem; color: #475569; margin-top: 6px;">Evaluated on {f_b_data.get("sample_count", 43635):,} FEVER benchmark claims</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -854,16 +857,20 @@ def main():
                         <div class="stat-lbl">Macro-F1</div>
                     </div>
                 </div>
-                <div style="font-size: 0.75rem; color: #065f46; margin-top: 6px;">Evaluated on 60 FEVER benchmark claims</div>
+                <div style="font-size: 0.75rem; color: #065f46; margin-top: 6px;">Evaluated on {p_data.get("total_samples", 60):,} FEVER benchmark claims</div>
             </div>
             """, unsafe_allow_html=True)
 
         st.markdown("<br/>", unsafe_allow_html=True)
         st.markdown("**Scientific Finding**")
+        fb_n = f_b_data.get("sample_count", 43635)
+        p_n = p_data.get("total_samples", 60)
         st.write(
-            "When evaluated on the same 60-claim FEVER verification benchmark, the conventional TF-IDF surface baseline achieves only 31.7% accuracy "
-            "(equivalent to random guessing across 3 classes). In contrast, the proposed EvidenceLens pipeline retrieves verified "
-            "reference passages using dense semantic embeddings and verifies claims with a cross-encoder NLI model, achieving 91.67% accuracy."
+            f"The conventional TF-IDF surface baseline was evaluated on {fb_n:,} FEVER benchmark claims, achieving only {fb_acc*100:.1f}% accuracy "
+            f"(Macro-F1: {fb_f1:.4f}) — close to random guessing across 3 classes. "
+            f"In contrast, the proposed EvidenceLens pipeline was evaluated on {p_n} FEVER benchmark claims, "
+            f"retrieving verified reference passages using dense semantic embeddings and verifying claims with a cross-encoder NLI model, "
+            f"achieving {p_acc*100:.1f}% accuracy (Macro-F1: {p_f1:.4f})."
         )
 
         st.markdown("<br/>", unsafe_allow_html=True)
@@ -881,11 +888,17 @@ def main():
     # ---------------- TAB 3: Architecture ----------------
     with tabs[2]:
         st.markdown("#### System Pipeline Architecture")
-        st.markdown("""
+        # Dynamically count indexed passages from the FAISS metadata file
+        _corpus_path = FAISS_METADATA_PATH if FAISS_METADATA_PATH.exists() else DEFAULT_EVIDENCE_CORPUS
+        try:
+            _corpus_size = sum(1 for _ in open(_corpus_path, "r", encoding="utf-8"))
+        except Exception:
+            _corpus_size = 605  # fallback
+        st.markdown(f"""
         The pipeline executes a sequential 4-stage process:
 
         1. **Claim Extraction**: The input text is normalized and segmented into individual declarative propositions. Subjective statements and questions are filtered out.
-        2. **Evidence Retrieval**: Each claim is mapped into a dense 384-dimensional vector space via `all-MiniLM-L6-v2`. FAISS searches the 100-passage corpus using inner product (cosine similarity on normalized embeddings) to retrieve candidate passages.
+        2. **Evidence Retrieval**: Each claim is mapped into a dense 384-dimensional vector space via `all-MiniLM-L6-v2`. FAISS searches the **{_corpus_size:,}-passage corpus** using inner product (cosine similarity on normalized embeddings) to retrieve candidate passages.
         3. **Verification**: The claim and retrieved evidence are passed into a cross-encoder NLI model (`cross-encoder/nli-distilroberta-base`). Full cross-attention across token pairs predicts entailment (SUPPORTED), contradiction (REFUTED), or neutral (UNCERTAIN).
         4. **Explanation**: A deterministic justification is generated citing specific reference passages and relevance scores.
         """)

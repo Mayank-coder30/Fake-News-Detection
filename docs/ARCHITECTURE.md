@@ -50,7 +50,7 @@ flowchart TD
 - **`document_loader.py`**: Ingests and validates knowledge documents from JSONL sources, preserving passage identifiers, source titles, and genuine canonical URLs.
 - **`embedding_model.py`**: Wraps `sentence-transformers/all-MiniLM-L6-v2` with batch inference, automatic GPU/CPU device detection, and unit L2 vector normalization.
 - **`vector_index.py`**: Houses a high-efficiency `FAISS` vector index (`IndexFlatIP`). Inner product on unit-normalized vectors calculates exact cosine similarity.
-- **`evidence_retriever.py`**: Executes dense semantic queries for each candidate claim, suppresses duplicates, applies a minimum relevance threshold (`0.35`), and ranks retrieved passages.
+- **`evidence_retriever.py`**: Executes dense semantic queries for each candidate claim, suppresses duplicates, applies a minimum relevance threshold (`0.20`), and ranks retrieved passages.
 
 ### 3.4 Claim Verification Module (`src/verification/`)
 - **`model_loader.py`**: Manages cached instantiations of Hugging Face transformers.

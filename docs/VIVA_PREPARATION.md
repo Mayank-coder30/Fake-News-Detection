@@ -68,7 +68,7 @@ We utilize `cross-encoder/nli-distilroberta-base`, a DistilRoBERTa model fine-tu
 
 ### Q10: How does the system handle missing evidence?
 **Answer**:  
-**Critical rule**: *The absence of evidence is not evidence of falsehood*. If the semantic retriever cannot locate passages with a relevance score above the threshold ($0.35$), the system automatically assigns `UNCERTAIN` and produces an explanation stating that sufficient evidence is currently unavailable in the knowledge corpus. It never falsely marks a claim as refuted simply because evidence was not found.
+**Critical rule**: *The absence of evidence is not evidence of falsehood*. If the semantic retriever cannot locate passages with a relevance score above the threshold ($0.20$), the system automatically assigns `UNCERTAIN` and produces an explanation stating that sufficient evidence is currently unavailable in the knowledge corpus. It never falsely marks a claim as refuted simply because evidence was not found.
 
 ---
 

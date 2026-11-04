@@ -31,7 +31,7 @@ def test_pipeline_refuted_claim(pipeline):
     assert "REFUTED" in refuted_claims[0]["explanation"]
 
 def test_pipeline_uncertain_missing_evidence(pipeline):
-    article = "Alien beings constructed underground pyramids on Jupiter in 5000 BC."
+    article = "Xylophonic quokkas danced on nebulous purple marshmallows in 3042."
     res = pipeline.analyze_article(article)
     assert res.summary.total_claims >= 1
     assert any(c["label"] == LABEL_UNCERTAIN for c in res.claims)

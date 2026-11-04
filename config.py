@@ -45,7 +45,7 @@ FEVER_BASELINE_MODEL_PATH = MODELS_DIR / "fever_baseline_classifier.joblib"
 
 # Retrieval & Verification Thresholds
 TOP_K_EVIDENCE = 3
-RELEVANCE_THRESHOLD = 0.35  # Cosine similarity threshold for evidence sufficiency
+RELEVANCE_THRESHOLD = 0.20  # Cosine similarity threshold for evidence sufficiency
 MAX_CLAIMS_PER_ARTICLE = 15
 
 # Canonical Label Definitions

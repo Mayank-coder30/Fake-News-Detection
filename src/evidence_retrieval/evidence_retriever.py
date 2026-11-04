@@ -28,7 +28,7 @@ class EvidenceRetriever:
         self,
         embedding_model: EmbeddingModel,
         vector_index: VectorIndex,
-        relevance_threshold: float = 0.35,
+        relevance_threshold: float = 0.20,
         default_top_k: int = 3
     ):
         self.embedding_model = embedding_model

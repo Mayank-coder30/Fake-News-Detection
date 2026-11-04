@@ -42,8 +42,8 @@ graph TD
     E -->|Normalized 384d Vectors| F[FAISS Vector Index: IndexFlatIP]
     F -->|Top-k Evidence Passages| G[Evidence Retriever]
     G --> H{Evidence Sufficient?}
-    H -->|Relevance < 0.35| I[Assign UNCERTAIN: Missing Evidence]
-    H -->|Relevance >= 0.35| J[Transformer NLI: nli-distilroberta-base]
+    H -->|Relevance < 0.20| I[Assign UNCERTAIN: Missing Evidence]
+    H -->|Relevance >= 0.20| J[Transformer NLI: nli-distilroberta-base]
     J --> K[Relevance-Stratified Multi-Evidence Aggregator]
     K --> L{Verdict}
     L -->|Entailment| M[SUPPORTED]

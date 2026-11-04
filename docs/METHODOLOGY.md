@@ -39,7 +39,7 @@ News articles contain mixed discourse modes: opinions, rhetorical questions, sub
 - **Dimensionality**: Each passage and claim is projected into $\mathbb{R}^{384}$.
 - **Inner Product & Cosine Equivalence**: By applying unit $L_2$ normalization during encoding ($\|\mathbf{e}\| = 1$), the inner product calculated by FAISS's `IndexFlatIP` is mathematically identical to cosine similarity:
   $$\langle \hat{\mathbf{e}}_c, \hat{\mathbf{e}}_p \rangle = \cos(\mathbf{e}_c, \mathbf{e}_p)$$
-- **Thresholding**: Passages with similarity score $< 0.35$ are discarded to prevent out-of-domain false retrievals.
+- **Thresholding**: Passages with similarity score $< 0.20$ are discarded to prevent out-of-domain false retrievals.
 
 ---
 
