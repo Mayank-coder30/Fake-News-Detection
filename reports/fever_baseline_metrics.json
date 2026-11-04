@@ -1,0 +1,51 @@
+{
+  "model_type": "TF-IDF + Logistic Regression (Surface-Level FEVER Baseline)",
+  "sample_count": 240,
+  "classes": [
+    "REFUTED",
+    "SUPPORTED",
+    "UNCERTAIN"
+  ],
+  "accuracy": 0.3458,
+  "macro_precision": 0.3485,
+  "macro_recall": 0.3458,
+  "macro_f1": 0.3403,
+  "per_class": {
+    "REFUTED": {
+      "precision": 0.3485,
+      "recall": 0.2875,
+      "f1_score": 0.3151,
+      "support": 80
+    },
+    "SUPPORTED": {
+      "precision": 0.3607,
+      "recall": 0.275,
+      "f1_score": 0.3121,
+      "support": 80
+    },
+    "UNCERTAIN": {
+      "precision": 0.3363,
+      "recall": 0.475,
+      "f1_score": 0.3938,
+      "support": 80
+    }
+  },
+  "confusion_matrix": [
+    [
+      23,
+      17,
+      40
+    ],
+    [
+      23,
+      22,
+      35
+    ],
+    [
+      20,
+      22,
+      38
+    ]
+  ],
+  "eval_dataset": "fever_processed.jsonl (Held-out Test Split)"
+}

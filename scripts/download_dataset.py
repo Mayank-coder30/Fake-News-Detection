@@ -15,27 +15,38 @@ from src.utils.logging_utils import get_logger
 
 logger = get_logger("download_dataset")
 
-# Official FEVER download URLs (S3 mirror maintained by FEVER authors)
+# Official FEVER download URLs (maintained by fever.ai authors)
 FEVER_FILES = {
-    "train.jsonl": "https://s3-eu-west-1.amazonaws.com/fever.public/train.jsonl",
-    "dev.jsonl": "https://s3-eu-west-1.amazonaws.com/fever.public/shared_task_dev.jsonl",
-    "test.jsonl": "https://s3-eu-west-1.amazonaws.com/fever.public/shared_task_test.jsonl",
+    "train.jsonl": "https://fever.ai/download/fever/train.jsonl",
+    "dev.jsonl": "https://fever.ai/download/fever/shared_task_dev.jsonl",
+    "test.jsonl": "https://fever.ai/download/fever/shared_task_test.jsonl",
 }
 
 def download_file(url: str, dest_path: Path):
-    """Downloads a file with basic progress logging."""
+    """Downloads a file with basic progress logging and proper User-Agent header."""
     logger.info(f"Downloading from {url} to {dest_path}...")
     try:
-        def reporthook(blocknum, blocksize, totalsize):
-            if totalsize > 0 and blocknum % 500 == 0:
-                percent = min(100.0, blocknum * blocksize * 100 / totalsize)
-                print(f"\rProgress: {percent:.1f}% ({blocknum * blocksize // (1024*1024)} MB)", end="")
-
-        urllib.request.urlretrieve(url, str(dest_path), reporthook=reporthook)
-        print()
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        with urllib.request.urlopen(req) as response, open(dest_path, "wb") as out_file:
+            totalsize = int(response.headers.get("Content-Length", 0))
+            blocksize = 8192
+            downloaded = 0
+            while True:
+                chunk = response.read(blocksize)
+                if not chunk:
+                    break
+                out_file.write(chunk)
+                downloaded += len(chunk)
+                if totalsize > 0 and (downloaded // blocksize) % 100 == 0:
+                    percent = min(100.0, downloaded * 100 / totalsize)
+                    mb = downloaded / (1024 * 1024)
+                    total_mb = totalsize / (1024 * 1024)
+                    print(f"\rProgress: {percent:.1f}% ({mb:.1f} MB / {total_mb:.1f} MB)", end="", flush=True)
+            print()
         logger.info(f"Successfully downloaded: {dest_path}")
     except Exception as e:
         logger.error(f"Failed to download {url}: {e}")
+        raise
 
 def main():
     import argparse
@@ -54,7 +65,7 @@ def main():
         url = FEVER_FILES.get(split)
         if url:
             target = dest_dir / split
-            if target.exists():
+            if target.exists() and target.stat().st_size > 0:
                 logger.info(f"{split} already exists at {target}, skipping download.")
             else:
                 download_file(url, target)
