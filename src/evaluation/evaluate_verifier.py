@@ -45,7 +45,9 @@ class VerifierEvaluator:
 
         detailed_results = []
 
-        for rec in records:
+        for idx, rec in enumerate(records):
+            if (idx + 1) % 50 == 0 or idx == len(records) - 1:
+                logger.info(f"Evaluated {idx + 1}/{len(records)} claims...")
             claim_id = str(rec["id"])
             claim_text = rec["claim"]
             gold = rec["label"]
