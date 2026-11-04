@@ -39,8 +39,9 @@ EMBEDDING_DIM = 384
 # cross-encoder/nli-distilroberta-base maps claim-evidence pairs directly
 DEFAULT_VERIFIER_MODEL = "cross-encoder/nli-distilroberta-base"
 
-# Baseline Model path
+# Baseline Model paths
 BASELINE_MODEL_PATH = MODELS_DIR / "baseline_classifier.joblib"
+FEVER_BASELINE_MODEL_PATH = MODELS_DIR / "fever_baseline_classifier.joblib"
 
 # Retrieval & Verification Thresholds
 TOP_K_EVIDENCE = 3

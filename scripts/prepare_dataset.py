@@ -48,15 +48,17 @@ def clean_and_standardize_record(raw_record: Dict[str, Any]) -> Dict[str, Any]:
     raw_evidence = raw_record.get("evidence", [])
     if isinstance(raw_evidence, list):
         for ev in raw_evidence:
-            if isinstance(ev, list) and len(ev) > 0:
-                # In FEVER format: [annotation_id, evidence_id, doc_title, line_number]
-                doc_title = ev[2] if len(ev) > 2 and ev[2] is not None else None
-                line_no = ev[3] if len(ev) > 3 and ev[3] is not None else None
-                if doc_title:
-                    evidence_entries.append({
-                        "doc_title": str(doc_title),
-                        "line_number": line_no
-                    })
+            if isinstance(ev, list):
+                # Handle nested groups: [[[ann_id, ev_id, doc_title, line]]] or [[ann_id, ev_id, doc_title, line]]
+                sub_items = ev if (len(ev) > 0 and isinstance(ev[0], list)) else [ev]
+                for item in sub_items:
+                    if isinstance(item, list) and len(item) > 2 and item[2] is not None:
+                        doc_title = item[2]
+                        line_no = item[3] if len(item) > 3 else None
+                        evidence_entries.append({
+                            "doc_title": str(doc_title),
+                            "line_number": line_no
+                        })
 
     return {
         "id": claim_id,
@@ -114,7 +116,20 @@ def prepare_dataset(input_file: Path, output_file: Path) -> Dict[str, int]:
     return stats
 
 if __name__ == "__main__":
-    # Prepare from sample or raw if available
-    sample_fever = SAMPLE_DATA_DIR / "fever_sample.jsonl"
-    processed_out = PROCESSED_DATA_DIR / "fever_processed.jsonl"
+    import argparse
+    parser = argparse.ArgumentParser(description="Prepare/standardize FEVER dataset")
+    parser.add_argument("--input", type=str, default=None,
+                        help="Input JSONL file (defaults to sample or raw)")
+    parser.add_argument("--output", type=str, default=None,
+                        help="Output processed JSONL file")
+    args = parser.parse_args()
+
+    # Determine input: CLI arg > raw dev split > sample
+    if args.input:
+        sample_fever = Path(args.input)
+    else:
+        raw_dev = RAW_DATA_DIR / "dev.jsonl"
+        sample_fever = raw_dev if raw_dev.exists() else (SAMPLE_DATA_DIR / "fever_sample.jsonl")
+
+    processed_out = Path(args.output) if args.output else (PROCESSED_DATA_DIR / "fever_processed.jsonl")
     prepare_dataset(sample_fever, processed_out)

@@ -27,7 +27,7 @@ share/python-wheels/
 MANIFEST
 
 # Virtual Environments
-.venv/
+.venv310/
 env/
 venv/
 ENV/
@@ -61,3 +61,5 @@ data/raw/*
 # OS files
 .DS_Store
 Thumbs.db
+
+.venv/
